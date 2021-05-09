@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Data.Entities;
 using eShopSolution.Data.Enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -116,8 +117,41 @@ namespace eShopSolution.Data.Extensions
                     Description = "Men T-Shirt"
                 });
             modelBuilder.Entity<ProductInCategory>().HasData(
-                new ProductInCategory() {ProductId = 1, CategoryId = 1 }
-                );
+                new ProductInCategory() {ProductId = 1, CategoryId = 1 });
+
+            var roleId = new Guid("8D04DCE2-969A-435D-BBA4-DF3F325983DC");
+            var adminId = new Guid("504A302E-2C7D-490A-A402-EA5BC0AFC5B5");
+            modelBuilder.Entity<AppRole>().HasData(new AppRole
+            {
+                Id = roleId,
+                Name = "admin",
+                NormalizedName = "admin",
+                Desciption = "Administrator role"
+            });
+
+            var hasher = new PasswordHasher<AppUser>();
+            modelBuilder.Entity<AppUser>().HasData(new AppUser
+            {
+                Id = adminId,
+                UserName = "admin",
+                NormalizedUserName = "admin",
+                Email = "whatthehell@gmail.com",
+                NormalizedEmail = "whatthehell@gmail.com",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "Abcd1234$"),
+                SecurityStamp = String.Empty,
+                Firstname = "Tuan",
+                Lastname = "Nguyen",
+                Dob = new DateTime(2021,01, 30)
+            });
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
+            {
+                RoleId = roleId,
+                UserId = adminId
+            
+            }) ;
+
+
         }
     }
 }
